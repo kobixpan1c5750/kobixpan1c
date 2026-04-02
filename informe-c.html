@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variables en C: De la Electricidad al Código</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--bg:#1e2227;--sb:#21252b;--code:#282c34;--txt:#abb2bf;--wh:#fff;--mut:#5c6370;--brd:#3e4451;--bl:#61afef;--pu:#c678dd;--gr:#98c379;--rd:#e06c75;--yl:#e5c07b;--cy:#56b6c2}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden}
+        .sidebar{width:320px;background:var(--sb);border-right:1px solid var(--brd);display:flex;flex-direction:column;flex-shrink:0}
+        .sidebar-header{padding:20px;border-bottom:1px solid var(--brd)}.sidebar-header h2{font-family:'Fira Code',monospace;color:var(--wh);font-size:1.1rem}
+        .sidebar-content{padding:15px 0;overflow-y:auto;flex-grow:1}.nav-group{margin-bottom:20px}
+        .nav-title{font-family:'Fira Code',monospace;font-size:0.75rem;color:var(--pu);text-transform:uppercase;padding:0 20px;margin-bottom:8px;letter-spacing:1px}
+        .nav-links{list-style:none}.nav-links li a{display:block;padding:5px 20px 5px 30px;color:var(--txt);text-decoration:none;font-size:0.82rem;border-left:3px solid transparent;transition:0.2s}
+        .nav-links li a:hover{background:rgba(97,175,239,0.1);color:var(--bl)}.nav-links li a.active{border-left-color:var(--bl);color:var(--bl);background:rgba(97,175,239,0.05);font-weight:600}
+        .main-content{flex-grow:1;height:100vh;overflow-y:auto;position:relative;scroll-behavior:smooth}
+        .content-wrapper{max-width:1000px;margin:0 auto;padding:40px 50px 200px 50px}
+        h1{color:var(--wh);font-size:2.3rem;font-weight:700;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid var(--brd)}
+        h2{color:var(--wh);font-size:1.7rem;margin-top:70px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
+        h3{color:var(--cy);font-size:1.2rem;margin-top:40px;margin-bottom:15px;font-family:'Fira Code',monospace}
+        p{font-size:1.02rem;line-height:1.85;margin-bottom:18px;text-align:justify}
+        ul,ol{margin-bottom:18px;padding-left:20px;font-size:1.02rem;line-height:1.85}li{margin-bottom:8px}strong{color:var(--wh)}
+        .img-c{margin:30px 0;text-align:center;background:#000;border:1px solid var(--brd);border-radius:8px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,0.5)}
+        .img-c img{width:100%;max-height:400px;object-fit:cover;display:block;opacity:0.85}.img-cap{padding:12px;font-family:'Fira Code',monospace;font-size:0.82rem;color:var(--mut);background:var(--sb);border-top:1px solid var(--brd)}
+        .box{background:rgba(97,175,239,0.05);border:1px solid var(--brd);border-left:4px solid var(--bl);padding:20px;margin:25px 0;border-radius:4px}
+        .box.w{border-left-color:var(--yl);background:rgba(229,192,123,0.05)}.box.d{border-left-color:var(--rd);background:rgba(224,108,117,0.05)}
+        .box h4{color:var(--bl);margin-bottom:10px;font-family:'Fira Code',monospace;font-size:0.95rem}.box.w h4{color:var(--yl)}.box.d h4{color:var(--rd)}
+        code{font-family:'Fira Code',monospace;background:var(--sb);color:var(--cy);padding:2px 5px;border-radius:3px;font-size:0.88em}
+        pre{background:var(--code);border:1px solid var(--brd);border-radius:6px;padding:18px;overflow-x:auto;margin:20px 0}
+        pre code{background:transparent;color:var(--txt);padding:0;font-size:0.92rem;line-height:1.55}
+        .k{color:var(--pu)}.t{color:var(--yl)}.s{color:var(--gr)}.f{color:var(--bl)}.c{color:var(--mut);font-style:italic}.n{color:#d19a66}.o{color:var(--cy)}
+        .mem{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:3px;background:var(--sb);padding:15px;border-radius:6px;border:1px solid var(--brd);margin:20px 0;font-family:'Fira Code',monospace;font-size:0.78rem;text-align:center}
+        .mem-h{grid-column:1/-1;color:var(--cy);margin-bottom:8px;font-weight:bold;border-bottom:1px solid var(--brd);padding-bottom:5px}
+        .mc{background:var(--code);padding:10px 5px;border:1px solid rgba(255,255,255,0.05);border-radius:3px;display:flex;flex-direction:column;gap:3px}
+        .mc.a{background:rgba(97,175,239,0.15);border-color:var(--bl);color:var(--bl)}
+        .mc.p{background:rgba(224,108,117,0.15);border:1px dashed var(--rd);color:var(--rd)}
+        .mc.g{background:rgba(152,195,121,0.15);border-color:var(--gr);color:var(--gr)}
+        .prog{position:fixed;top:0;left:320px;width:calc(100% - 320px);height:3px;z-index:1000;background:var(--sb)}
+        .prog-bar{height:100%;background:var(--bl);width:0%}
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Arquitectura en C</h2></div>
+    <div class="sidebar-content">
+        <div class="nav-group">
+    <ul class="nav-links">
+        <li>
+            <a href="index.html" style="color: var(--cyan); border-left: 3px solid var(--cyan); background: rgba(86, 182, 194, 0.1);">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Portafolio
+            </a>
+        </li>
+    </ul>
+</div>
+        <div class="nav-group"><div class="nav-title">Módulo 1: Hardware</div><ul class="nav-links">
+            <li><a href="#m1" class="active">1. Fundamentos Físicos</a></li><li><a href="#m1-1">1.1 Transistores y RAM</a></li><li><a href="#m1-2">1.2 Bus de Datos</a></li><li><a href="#m1-3">1.3 MMU y Páginas</a></li><li><a href="#m1-4">1.4 Garbage Values</a></li>
+        </ul></div>
+        <div class="nav-group"><div class="nav-title">Módulo 2: Binario</div><ul class="nav-links">
+            <li><a href="#m2">2. Representación</a></li><li><a href="#m2-1">2.1 Complemento a Dos</a></li><li><a href="#m2-2">2.2 Overflow</a></li><li><a href="#m2-3">2.3 IEEE 754</a></li><li><a href="#m2-4">2.4 ASCII</a></li>
+        </ul></div>
+        <div class="nav-group"><div class="nav-title">Módulo 3: SO</div><ul class="nav-links">
+            <li><a href="#m3">3. Gestión de Memoria</a></li><li><a href="#m3-1">3.1 Stack Frame</a></li><li><a href="#m3-2">3.2 Heap</a></li><li><a href="#m3-3">3.3 Segmentos</a></li><li><a href="#m3-4">3.4 Static</a></li>
+        </ul></div>
+        <div class="nav-group"><div class="nav-title">Módulo 4: Bajo Nivel</div><ul class="nav-links">
+            <li><a href="#m4">4. Optimización</a></li><li><a href="#m4-1">4.1 Register</a></li><li><a href="#m4-2">4.2 Volatile</a></li><li><a href="#m4-3">4.3 Padding</a></li><li><a href="#m4-4">4.4 Endianness</a></li>
+        </ul></div>
+        <div class="nav-group"><div class="nav-title">Módulo 5: Seguridad</div><ul class="nav-links">
+            <li><a href="#m5">5. Punteros y Peligros</a></li><li><a href="#m5-1">5.1 Punteros</a></li><li><a href="#m5-2">5.2 Buffer Overflow</a></li><li><a href="#m5-3">5.3 UB</a></li>
+        </ul></div>
+        <div class="nav-group"><div class="nav-title">Módulo 6: Herramientas</div><ul class="nav-links">
+            <li><a href="#m6">6. Depuración</a></li><li><a href="#m6-1">6.1 GDB</a></li><li><a href="#m6-2">6.2 Valgrind</a></li>
+        </ul></div>
+    </div>
+</aside>
+
+<main class="main-content" id="mainScroll">
+<div class="prog"><div class="prog-bar" id="progressBar"></div></div>
+<div class="content-wrapper">
+
+<h1>Variables en C: De la Electricidad al Código</h1>
+<p>Este documento es una guía completa sobre la arquitectura de variables en el lenguaje C. No asumiremos conocimiento previo. Comenzaremos desde los principios electrónicos más básicos y avanzaremos hasta la gestión de memoria por parte del Sistema Operativo, la optimización a nivel de hardware y la seguridad de los punteros. El objetivo es que al terminar esta lectura, entiendas exactamente qué ocurre dentro de tu computadora cada vez que escribes una línea de código en C.</p>
+
+<!-- ===================== MÓDULO 1 ===================== -->
+<h2 id="m1">Módulo 1: Fundamentos Físicos de la Memoria</h2>
+<p>Antes de hablar de programación, necesitamos entender el material sobre el que vamos a trabajar. Tu computadora, por más compleja que parezca, se reduce a millones de interruptores eléctricos microscópicos llamados transistores. Un transistor es un componente de silicio que puede estar en dos estados: permitir el paso de corriente (voltaje alto) o bloquearlo (voltaje bajo). A estos dos estados les llamamos 1 y 0, respectivamente.</p>
+
+<p>La memoria RAM de tu computadora está compuesta por miles de millones de estos transistores organizados en una cuadrícula gigante. Cada celda individual de esta cuadrícula almacena un solo bit (un 1 o un 0). Sin embargo, manipular bits individuales es ineficiente para el procesador, por lo que la industria estandarizó agruparlos en bloques de 8. A un bloque de 8 bits lo llamamos Byte, y es la unidad mínima de dirección de memoria en las arquitecturas modernas.</p>
+
+<p>Cuando escribes <code>int edad = 25;</code> en C, no estás creando una variable abstracta. Estás instruyendo al compilador para que reserve exactamente 4 Bytes contiguos en la RAM (32 transistores), les asigne una dirección de memoria única, y sobrescriba los voltajes de esos 32 transistores con el patrón binario equivalente al número 25. Tu variable no es un concepto, es una región física de silicio.</p>
+
+<h3 id="m1-1">1.1 Los Transistores, los Capacitores y la RAM Dinámica</h3>
+<p>La memoria RAM más común en computadoras modernas se llama DRAM (Dynamic Random-Access Memory). A diferencia de los registros de la CPU que usan circuitos complejos llamados flip-flops (formados por 6 transistores cada uno) para retener datos, la DRAM usa una estructura mucho más simple y densa: un transistor emparejado con un capacitor. El capacitor es como un cubo microscópico que retiene electrones. Si está cargado (voltaje alto), se lee como 1. Si está vacío (voltaje bajo), se lee como 0.</p>
+
+<p>El problema con los capacitores es que pierden carga con el tiempo (fugas naturales de electrones). Por eso la memoria se llama "dinámica": el controlador de memoria debe recargar (refrescar) los voltajes de cada capacitor miles de veces por segundo. Si no lo hace, los datos se corrompen automáticamente. Esta es una de las razones por las que la RAM es volátil: cuando apagas la computadora y se corta la alimentación eléctrica, los capacitores se descargan y todos los datos se pierden en milisegundos.</p>
+
+<div class="img-c">
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" alt="Circuitos integrados">
+<div class="img-cap">Fig 1.1: Oblea de silicio con circuitos integrados. La memoria DRAM usa la estructura más simple posible (1 transistor + 1 capacitor por celda) para maximizar la densidad de almacenamiento.</div>
+</div>
+
+<p>Ahora bien, los procesadores no leen la memoria byte por byte. Cuando la CPU necesita un dato, envía una señal de solicitud a través del bus de datos y el controlador de memoria (Memory Controller) le entrega un bloque completo de datos de una sola vez. Este bloque suele ser de 64 bits (8 Bytes) en arquitecturas modernas. El controlador de memoria es el intermediario físico entre el procesador y los chips de RAM, y su diseño determina la velocidad máxima de transferencia de datos del sistema.</p>
+
+<h3 id="m1-2">1.2 El Bus de Direcciones y el Formato Hexadecimal</h3>
+<p>Si la RAM tiene miles de millones de Bytes, la CPU necesita un mecanismo para identificar exactamente cuál Byte quiere leer o escribir. Para esto existe el Bus de Direcciones: un conjunto de cables paralelos que conectan la CPU con los chips de memoria. En una arquitectura de 64 bits, el bus de direcciones tiene 64 cables. Cada combinación de voltajes en estos 64 cables identifica un único Byte en la RAM.</p>
+
+<p>El número que resulta de esta combinación de voltajes es la Dirección de Memoria. Como estas direcciones son números enormes (potencialmente hasta 2^64 = 18.4 quintillones de combinaciones), se expresan en formato hexadecimal (base 16) para ser más compactas y legibles. El sistema hexadecimal usa los dígitos 0-9 y las letras A-F, donde cada dígito hexadecimal representa exactamente 4 bits. Por eso, dos dígitos hexadecimales representan un Byte completo (8 bits).</p>
+
+<p>El lenguaje C nos permite ver esta dirección de memoria directamente usando el operador <code>&</code> (ampersand). Este operador extrae y devuelve la coordenada hexadecimal donde el bloque de transistores ha sido reservado para tu variable.</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">int</span> temperatura = <span class="n">24</span>;
+    <span class="t">int</span> presion = <span class="n">1013</span>;
+    <span class="t">int</span> humedad = <span class="n">65</span>;
+
+    <span class="f">printf</span>(<span class="s">"Valor: %d | Dirección: %p\n"</span>, temperatura, (<span class="t">void</span>*)&temperatura);
+    <span class="f">printf</span>(<span class="s">"Valor: %d | Dirección: %p\n"</span>, presion, (<span class="t">void</span>*)&presion);
+    <span class="f">printf</span>(<span class="s">"Valor: %d | Dirección: %p\n"</span>, humedad, (<span class="t">void</span>*)&humedad);
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<div class="box">
+<h4>Análisis de Salida (Linux x86-64):</h4>
+<p>Valor: 24 &nbsp;|&nbsp; Dirección: 0x7ffd8a9b1c1c<br>
+Valor: 1013 | Dirección: 0x7ffd8a9b1c18<br>
+Valor: 65 &nbsp; | Dirección: 0x7ffd8a9b1c14</p>
+<p style="margin-top:10px">Observa el patrón. Las direcciones son descendentes. La diferencia entre <code>0x1c</code> (28 decimal) y <code>0x18</code> (24 decimal) es exactamente <strong>4</strong>. Esto confirma que C alojó las variables una tras otra, respetando los 4 Bytes que exige el tipo <code>int</code>. Las variables no están distribuidas aleatoriamente por la RAM; están contiguas como casas en una calle.</p>
+</div>
+
+<h3 id="m1-3">1.3 La MMU y la Memoria Virtual</h3>
+<p>Ahora viene una revelación importante: las direcciones que acabamos de imprimir (como <code>0x7ffd8a9b1c1c</code>) <strong>son falsas</strong>. No corresponden a los chips de silicio de tu placa base. Son direcciones virtuales.</p>
+
+<p>Si tu programa en C pudiera acceder directamente a la memoria física real, ocurriría un desastre. Podrías sobrescribir el kernel del sistema operativo (causando un Kernel Panic o Pantallazo Azul), podrías leer las contraseñas del navegador de otra persona, o podrías corromper los datos de otros procesos. Para prevenir esto, el procesador incluye un componente de hardware llamado MMU (Memory Management Unit).</p>
+
+<p>La MMU es un chip dentro del procesador que intercepta cada operación de lectura y escritura antes de que llegue a la RAM física. Cuando tu programa en C intenta escribir el número 24 en la dirección virtual <code>0x7ffd8a9b1c1c</code>, la MMU consulta una estructura de datos llamada Tabla de Páginas (Page Table), que el Sistema Operativo mantiene en secreto. La Tabla de Páginas es un diccionario gigante que mapea direcciones virtuales a direcciones físicas reales.</p>
+
+<p>La MMU traduce <code>0x7ffd8a9b1c1c</code> (virtual) a algo como <code>0x00A4F2B8</code> (físico), y es a esta dirección real donde envía el voltaje. Este proceso de traducción es tan rápido (gracias a una memoria caché especial llamada TLB - Translation Lookaside Buffer) que tu programa nunca se entera de que fue engañado.</p>
+
+<p>El Sistema Operativo crea para cada programa un Espacio de Direcciones Virtual exclusivo. Para tu programa, la memoria parece un bloque gigante y contiguo que empieza en dirección 0 y termina en el límite de 64 bits. Pero en la realidad física, los bytes de tu programa están fragmentados y dispersos aleatoriamente en páginas de 4096 Bytes (4 KB) a lo largo de los distintos bancos de memoria física.</p>
+
+<h3 id="m1-4">1.4 El Sistema Operativo y la Asignación por Páginas</h3>
+<p>Cuando tu programa en C necesita memoria (por ejemplo, al declarar una variable local dentro de una función), el Sistema Operativo no te da byte por byte. La unidad mínima de asignación es la Página (Page), que en arquitectura x86-64 es de 4096 Bytes.</p>
+
+<p>Si tu función declara variables que suman 500 Bytes, el SO no te entregará exactamente 500 Bytes. Te entregará una Página completa de 4096 Bytes, y tu programa administrará internamente esos 500 Bytes dentro de esa página. Los 3596 Bytes restantes se quedan reservados pero sin uso. Esto parece un desperdicio, pero es la forma más eficiente que encontraron los ingenieros de hardware para administrar la memoria a gran escala.</p>
+
+<div class="img-c">
+<img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&w=1200&q=80" alt="Infraestructura de red y datos">
+<div class="img-cap">Fig 1.2: El Sistema Operativo asigna carriles completos (Páginas de 4KB) a los procesos. Cada programa administra internamente los bytes dentro de esos carriles físicos.</div>
+</div>
+
+<h3 id="m1-5">1.5 Garbage Values: La Memoria Sucia</h3>
+<p>Aquí llegamos a uno de los conceptos más peligrosos de C para un principiante. Cuando el SO te entrega una Página de 4096 Bytes para tu programa, <strong>no limpia esa memoria</strong>. Borrar 4096 Bytes (poner ceros en cada capacitor) tomaría ciclos de reloj valiosos. El SO simplemente toma una Página que fue liberada recientemente por otro programa (tu navegador, un juego, un editor de texto) y te la entrega con los voltajes exactamente como quedaron.</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">int</span> variable_sucia;
+    <span class="f">printf</span>(<span class="s">"Contenido residual: %d\n"</span>, variable_sucia);
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<p>Este código no da error. Imprime un número aleatorio como <code>-18273645</code> o <code>32766</code>. Ese número es la lectura directa de los ceros y unos que dejó el último programa que usó esa porción de RAM. A esto se le llama Garbage Value (Valor Basura).</p>
+
+<div class="box d">
+<h4><i class="fa-solid fa-triangle-exclamation"></i> Importante</h4>
+<p>En lenguajes como Python o Java, usar una variable sin inicializar genera un error y el programa se detiene. En C, el programa continúa operando con datos corruptos. En un software de control aéreo o médico, leer un Garbage Value puede tomar decisiones catastróficas basadas en datos residuales de otro proceso. <strong>En C, inicializar la memoria es tu responsabilidad absoluta.</strong> La instrucción <code>int x = 0;</code> genera una operación de escritura (típicamente la instrucción ensamblador <code>mov</code>) que descarga físicamente los capacitores de esa dirección y los establece a un estado conocido y seguro.</p>
+</div>
+
+
+<!-- ===================== MÓDULO 2 ===================== -->
+<h2 id="m2" style="margin-top:80px">Módulo 2: Representación Binaria y Traducción de Datos</h2>
+<p>Ya sabemos que la memoria almacena voltajes eléctricos (0s y 1s). Pero aquí surge la pregunta fundamental: ¿cómo sabe la CPU si una secuencia específica de 32 bits representa el número positivo 5, el número negativo -5, la letra 'E', o un píxel rojo de una imagen? La respuesta es: no lo sabe. La RAM es completamente estúpida y ciega.</p>
+
+<p>El Tipo de Dato en C (<code>int</code>, <code>float</code>, <code>char</code>) es el filtro matemático que le dice al procesador cómo interpretar esos voltajes. Cada tipo de dato implementa un protocolo de codificación diferente. Vamos a desglosar los tres protocolos más importantes.</p>
+
+<h3 id="m2-1">2.1 Enteros Positivos y el Complemento a Dos</h3>
+<p>Representar números positivos en binario es directo: se convierte el número decimal a base 2. El número 13 en binario es <code>00001101</code>. Pero, ¿cómo representas un número negativo como -13? La CPU no tiene un "cable negativo". Todo debe expresarse con 0s y 1s.</p>
+
+<p>La intuición sugiere usar el primer bit como signo: 0 para positivo, 1 para negativo. Pero los ingenieros de hardware rechazaron esta idea porque construir circuitos separados para sumar y restar es costoso. En su lugar, inventaron el Complemento a Dos, un truco matemático brillante que permite que la CPU realice restas usando solo circuitería de suma.</p>
+
+<p>Para convertir un número positivo a su representación negativa:</p>
+<ol>
+    <li>Tomamos el número positivo en binario (ej. 13 = <code>00001101</code>).</li>
+    <li>Invertimos absolutamente todos los bits (0→1, 1→0). Resultado: <code>11110010</code>.</li>
+    <li>Sumamos 1 al resultado. <code>11110010 + 1 = 11110011</code>.</li>
+</ol>
+<p>Para la CPU, <code>11110011</code> es exactamente -13. Si la ALU (Unidad Lógico-Aritmética) del procesador suma el 13 original con el -13, el acarreo binario se descarta y el resultado es exactamente cero. La CPU ha resuelto una resta sin tener circuitos de resta.</p>
+
+<p>Esto significa que en un sistema de 8 bits con Complemento a Dos, el rango de valores es de -128 a +127. El bit más significativo (MSB) opera implícitamente como indicador de signo. Si es 0, el número es positivo. Si es 1, el número es negativo. En un <code>int</code> de 32 bits, esto se escala a un rango de -2,147,483,648 a +2,147,483,647.</p>
+
+<h3 id="m2-2">2.2 Overflow y el Colapso de los Límites</h3>
+<p>Si un <code>int</code> de 32 bits puede representar hasta 2,147,483,647, ¿qué pasa si sumas 1 a ese número? En Python, el lenguaje pide más memoria y te da el resultado correcto. En C, <strong>no hay protección</strong>. La CPU ejecuta la suma binaria y los bits se comportan según las leyes de la física.</p>
+
+<p>El número máximo positivo en 32 bits es <code>01111111 11111111 11111111 11111111</code> (un 0 seguido de 31 unos). Al sumar 1, el acarreo se propaga a través de todos los unos, convirtiéndolos en ceros, hasta que el "1" sobrante llega a la posición 32, encendiendo el bit de signo. El resultado es <code>10000000 00000000 00000000 00000000</code>.</p>
+
+<p>Según el Complemento a Dos, esa secuencia con el bit de signo encendido es <strong>-2,147,483,648</strong>. Has sumado 1 al máximo positivo y obtuviste el máximo negativo. A esto se le llama Integer Overflow.</p>
+
+<div class="box d">
+<h4>Demostración de Overflow</h4>
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;limits.h&gt;</span>
+
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">int</span> maximo = INT_MAX; <span class="c">// 2,147,483,647</span>
+    <span class="f">printf</span>(<span class="s">"Valor máximo: %d\n"</span>, maximo);
+    maximo = maximo + <span class="n">1</span>;
+    <span class="f">printf</span>(<span class="s">"Tras sumar 1: %d\n"</span>, maximo);
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+<p>Salida: <code>Valor máximo: 2147483647</code> → <code>Tras sumar 1: -2147483648</code></p>
+<p>Este comportamiento causó la explosión del cohete Ariane 5 en 1996. Un <code>int</code> de 16 bits intentó guardar un valor de 64 bits, provocó overflow, y el software de navegación recibió un número negativo catastrófico que invirtió la trayectoria del cohete.</p>
+</div>
+
+<h3 id="m2-3">2.3 IEEE 754: Cómo se Guardan los Decimales</h3>
+<p>Ahora el problema más complejo: ¿cómo guardas el número 3.14159 en transistores que solo entienden de 0s y 1s? Para esto existe el estándar IEEE 754. Cuando declaras un <code>float</code> en C (que ocupa 32 bits), el procesador divide esos 32 bits en tres campos obligatorios:</p>
+
+<ul>
+    <li><strong>Bit 31 (Signo):</strong> 1 bit. Si es 0, el número es positivo. Si es 1, es negativo. No usa Complemento a Dos.</li>
+    <li><strong>Bits 30-23 (Exponente):</strong> 8 bits. Representa el multiplicador base 2 (similar al exponente en notación científica). Se almacena con un sesgo (bias) de 127 para permitir exponentes negativos sin usar signos adicionales.</li>
+    <li><strong>Bits 22-0 (Mantisa/Fracción):</strong> 23 bits. Los dígitos significativos del número. Se asume implícitamente un "1." al inicio (bit oculto) para maximizar la precisión.</li>
+</ul>
+
+<div class="img-c">
+<img src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?auto=format&fit=crop&w=1200&q=80" alt="Flujo de datos">
+<div class="img-cap">Fig 2.1: El estándar IEEE 754 fragmenta los 32 bits en Signo, Exponente y Mantisa. Cada campo tiene una función matemática específica para representar números decimales mediante notación científica binaria.</div>
+</div>
+
+<p><strong>El problema fundamental:</strong> La Mantisa solo tiene 23 bits. 23 bits son finitos. Por lo tanto, es <strong>físicamente imposible</strong> que la CPU represente exactamente la mayoría de los números decimales. El número 0.1 en decimal genera una fracción binaria periódica infinita (<code>0.0001100110011...</code>). La CPU la trunca al bit 23 y redondea. El resultado es una aproximación microscópicamente inexacta.</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">float</span> a = <span class="n">0.1f</span>;
+    <span class="t">float</span> b = <span class="n">0.2f</span>;
+    <span class="k">if</span> (a + b == <span class="n">0.3f</span>) {
+        <span class="f">printf</span>(<span class="s">"Correcto\n"</span>);
+    } <span class="k">else</span> {
+        <span class="f">printf</span>(<span class="s">"INCORRECTO. Valor real: %.20f\n"</span>, a + b);
+    }
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<p>Salida: <code>INCORRECTO. Valor real: 0.30000001192092895508</code></p>
+<p>La suma 0.1 + 0.2 no es 0.3. Es 0.3000000119... Esta es la razón por la que los bancos nunca usan <code>float</code> o <code>double</code> para dinero. Usan enteros (centavos) o bibliotecas de aritmética decimal de precisión fija.</p>
+
+<p>Además de la imprecisión, los números muy cercanos a cero activan un modo especial del hardware llamado números subnormales (denormals). En este modo, la CPU relaja las reglas de normalización para evitar un colapso a cero abrupto (underflow). Sin embargo, el procesamiento de subnormales puede ser hasta 100 veces más lento en arquitecturas antiguas, porque la FPU (Floating Point Unit) delega el cálculo al microcódigo interno en lugar del hardware dedicado.</p>
+
+<h3 id="m2-4">2.4 La Ilusión del Texto: ASCII y el Tipo char</h3>
+<p>Para cerrar este módulo, analicemos el tipo más simple de C: <code>char</code>. Un <code>char</code> no es una letra. Reserva exactamente 1 Byte (8 bits) y opera matemáticamente como un entero con rango de -128 a 127 (signed) o 0 a 255 (unsigned). La interpretación como letra es responsabilidad exclusiva del sistema de salida (monitor, terminal), no del procesador.</p>
+
+<p>En los años 60, se creó el estándar ASCII: un diccionario que mapea números a formas geométricas. El número 65 se mapea a la letra 'A'. El número 97 a la 'a'. El número 48 al dígito '0'. La CPU no sabe nada de esto; simplemente ejecuta instrucciones aritméticas sobre los 8 bits.</p>
+
+<p>Dado que las letras son números disfrazados, C permite operaciones matemáticas directas. La diferencia entre una letra mayúscula y su minúscula correspondiente en ASCII es siempre 32. Esto nos permite transformar caracteres usando operaciones a nivel de bit (Bitwise operations), una técnica extremadamente eficiente usada en kernels de sistemas operativos:</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">char</span> minuscula = <span class="s">'h'</span>;  <span class="c">// ASCII 104 → Binario: 0110 1000</span>
+    <span class="t">char</span> mayuscula = minuscula <span class="o">^</span> <span class="n">32</span>; <span class="c">// XOR con 32 (0010 0000)</span>
+    <span class="f">printf</span>(<span class="s">"%c → %c\n"</span>, minuscula, mayuscula); <span class="c">// h → H</span>
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<p>La operación XOR con 32 invierte exactamente el sexto bit, que es el único bit que diferencia mayúsculas de minúsculas en ASCII. Esto es más rápido que llamar a una función de biblioteca y requiere un solo ciclo de CPU. Un string en C no es más que un array de enteros de 1 Byte terminado por un byte nulo (<code>\0</code>, equivalente al valor 0).</p>
+
+
+<!-- ===================== MÓDULO 3 ===================== -->
+<h2 id="m3" style="margin-top:80px">Módulo 3: Gestión de Memoria del Sistema Operativo</h2>
+<p>Hemos hablado de la física de la RAM y de cómo la CPU interpreta los datos. Ahora debemos responder la pregunta: ¿dónde exactamente viven las variables en el espacio de memoria? El Sistema Operativo no deja que tu programa esparza datos por toda la RAM de forma caótica. Al iniciar la ejecución del código C, el SO divide el Espacio Virtual del proceso en segmentos geográficos estrictos con reglas de vida y muerte completamente diferentes.</p>
+
+<h3 id="m3-1">3.1 El Stack (La Pila de Llamadas)</h3>
+<p>El segmento más veloz y frecuente es el Stack. Aquí viven todas tus variables locales (las declaradas dentro de funciones). El Stack funciona bajo el modelo LIFO (Last In, First Out), como una pila de platos. La CPU controla este territorio con dos registros especiales: el Base Pointer (RBP) que marca el fondo del marco actual, y el Stack Pointer (RSP) que señala la cima.</p>
+
+<p>Cada vez que invocas una función en C, ocurre lo siguiente:</p>
+<ol>
+    <li>La CPU guarda la dirección de retorno (para saber a qué línea volver cuando la función acabe).</li>
+    <li>El registro RSP decrementa su valor, "cercando" un bloque contiguo de Bytes en la RAM exactamente del tamaño necesario para las variables locales de esa función. A este bloque se le llama Stack Frame.</li>
+    <li>Dentro del Stack Frame, las variables se asignan como offsets (desplazamientos) relativos al RBP. Por ejemplo, la primera variable local está en [RBP-4], la segunda en [RBP-8], etc.</li>
+    <li>Al terminar la función (sentencia return), el RSP revierte a su posición original. Los datos no se borran, pero quedan fuera del marco protegido. Se convierten en Garbage Values para la siguiente función.</li>
+</ol>
+
+<p>El Stack es rapidísimo porque la asignación de memoria es una simple resta de un registro de CPU. No hay llamadas al Sistema Operativo ni búsquedas de espacio libre. Sin embargo, el SO limita estrictamente su tamaño (típicamente 8 MB en Linux). Si tu función declara variables que exceden este límite, el RSP rebasará la zona asignada y el SO matará tu proceso con un Segmentation Fault (Stack Overflow).</p>
+
+<div class="mem">
+<div class="mem-h">Estructura de un Stack Frame en x86-64 (Direcciones altas → bajas)</div>
+<div class="mc g" style="grid-column:1/-1">Argumentos pasados por la función que llamó (caller)</div>
+<div class="mc a" style="grid-column:1/-1">Dirección de Retorno (Instruction Pointer salvado)</div>
+<div class="mc" style="grid-column:1/-1">RBP Antiguo (Base Pointer de la función anterior)</div>
+<div class="mc a">int x = 10;<br>[RBP-4]</div>
+<div class="mc a">char c = 'A';<br>[RBP-5]</div>
+<div class="mc a">double d = 3.14;<br>[RBP-16]</div>
+<div class="mc p" style="grid-column:1/-1">← RSP apunta aquí (espacio libre para crecimiento)</div>
+</div>
+
+<h3 id="m3-2">3.2 El Heap: Memoria Dinámica (malloc / free)</h3>
+<p>El Stack tiene 8 MB. Si necesitas cargar una imagen de 50 MB, un mapa 3D gigante o una base de datos completa, el Stack no te alcanza. Para esto existe el Heap: una región masiva de memoria virtual que el programa puede solicitar manualmente en tiempo de ejecución.</p>
+
+<p>Para pedir memoria en el Heap, usamos la función <code>malloc()</code> (Memory Allocation). A nivel profundo, si la solicitud es grande, <code>malloc</code> ejecuta una llamada al kernel del Sistema Operativo (como <code>mmap</code> en Linux) que busca páginas de memoria libres y te devuelve la dirección inicial del bloque asignado.</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdlib.h&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="c">// Solicitar 1,000,000 de enteros (aprox 4 MB) al SO</span>
+    <span class="t">int</span> *datos = <span class="f">malloc</span>(<span class="n">1000000</span> * <span class="k">sizeof</span>(<span class="t">int</span>));
+    
+    <span class="k">if</span> (datos == <span class="n">NULL</span>) {
+        <span class="f">printf</span>(<span class="s">"Error: No hay RAM disponible\n"</span>);
+        <span class="k">return</span> <span class="n">1</span>;
+    }
+    
+    <span class="c">// Usar la memoria...</span>
+    datos[<span class="n">0</span>] = <span class="n">42</span>;
+    
+    <span class="c">// LIBERAR: Obligación ineludible del programador</span>
+    <span class="f">free</span>(datos);
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<div class="box d">
+<h4>Memory Leak: La Fuga Mortal</h4>
+<p>En el Stack, el SO limpia automáticamente al terminar la función. En el Heap, <strong>tú eres el responsable</strong>. Si reservas memoria con <code>malloc</code> y olvidas llamar a <code>free()</code>, esa porción de RAM queda bloqueada indefinidamente. El SO piensa que tu programa todavía la está usando, así que no la entrega a nadie más.</p>
+<p>Si esto ocurre dentro de un bucle (por ejemplo, un servidor web que procesa miles de peticiones por minuto), tu programa irá comiendo RAM gigabyte tras gigabyte, hasta agotar toda la memoria física del sistema. El servidor se congelará y, en Linux, el kernel activará el OOM Killer (Out of Memory Killer), un proceso del SO que selecciona y asesina al proceso más hambriento de RAM para salvar al sistema.</p>
+</div>
+
+<h3 id="m3-3">3.3 Segmentos .data y .bss (Variables Globales)</h3>
+<p>Las variables globales (declaradas fuera de toda función) no viven ni en el Stack (porque no mueren al terminar una función) ni en el Heap (porque no usas malloc). Nacen cuando el programa se abre y mueren cuando se cierra. El compilador las clasifica en el ejecutable binario en dos segmentos diferentes:</p>
+
+<ul>
+    <li><strong>Segmento .data:</strong> Variables globales con valor inicial explícito. Ejemplo: <code>int puerto_servidor = 8080;</code>. El valor 8080 se escribe literalmente dentro del archivo ejecutable en el disco duro. Cuando abres el programa, el SO copia ese valor a la RAM. Ocupan espacio real en disco.</li>
+    <li><strong>Segmento .bss:</strong> Variables globales sin valor inicial. Ejemplo: <code>int buffer[1000000];</code>. Para no grabar 1 millón de ceros en el disco duro (inflando el tamaño del ejecutable innecesariamente), el compilador solo deja una nota en la cabecera del archivo: "SO, cuando abras este programa, consígueme 4 MB de RAM y llénalos de ceros". Por esta razón, las variables en .bss <strong>siempre empiezan en cero</strong>, a diferencia del Garbage Value del Stack.</li>
+</ul>
+
+<h3 id="m3-4">3.4 El Modificador static: Variables Inmortales que Fingen ser Locales</h3>
+<p>Una de las herramientas más poderosas de C es el modificador <code>static</code> aplicado a una variable local. Crea una paradoja arquitectónica fascinante:</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+
+<span class="t">void</span> <span class="f">disparo</span>() {
+    <span class="k">static int</span> balas = <span class="n">10</span>;
+    balas--;
+    <span class="f">printf</span>(<span class="s">"Balas restantes: %d\n"</span>, balas);
+}
+
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="f">disparo</span>(); <span class="c">// Imprime 9</span>
+    <span class="f">disparo</span>(); <span class="c">// Imprime 8</span>
+    <span class="f">disparo</span>(); <span class="c">// Imprime 7</span>
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<p>Si <code>balas</code> fuera una variable normal, viviría en el Stack, moriría al terminar la función, y volvería a valer 10 en cada disparo. Pero <code>static</code> le ordena al compilador: "Finge que esta variable es local para el humano, pero físicamente sácala del Stack y guárdala en el segmento .data". La variable sobrevive entre llamadas, pero su nombre es inaccesible desde otras funciones. Es un encapsulamiento perfecto usando las reglas del Sistema Operativo.</p>
+
+
+<!-- ===================== MÓDULO 4 ===================== -->
+<h2 id="m4" style="margin-top:80px">Módulo 4: Optimización y Control de Hardware</h2>
+<p>La RAM es lenta para la CPU. Un acceso a RAM puede tardar 100 nanosegundos. En tiempo de procesador (que opera a miles de millones de ciclos por segundo), eso es una eternidad. Para mitigar esta latencia, los compiladores y el hardware implementan mecanismos de optimización agresivos. Pero como siempre en C, la velocidad tiene un precio.</p>
+
+<h3 id="m4-1">4.1 El Modificador register: Variables en el Cerebro de la CPU</h3>
+<p>Dentro del propio chip del procesador existen memorias microscópicas llamadas Registros (EAX, RBX, RCX en x86-64). Leer un dato de un registro toma 1 ciclo de reloj. Comparado con los 100+ ciclos de la RAM, es instantáneo. C permite usar el modificador <code>register</code> para sugerirle al compilador que aloje una variable directamente en un registro de la CPU, evitando por completo el viaje a la RAM.</p>
+
+<pre><code><span class="t">void</span> <span class="f">bucle_critico</span>() {
+    <span class="k">register int</span> i;
+    <span class="k">for</span> (i = <span class="n">0</span>; i < <span class="n">1000000000</span>; i++) {
+        <span class="c">// Cálculos puros en el silicio de la CPU, sin tocar la RAM</span>
+    }
+}</code></pre>
+
+<p><strong>La limitación:</strong> Los registros de la CPU no tienen direcciones de memoria. Son componentes físicos aislados dentro del chip. Por eso, si intentas usar el operador <code>&</code> sobre una variable <code>register</code> (<code>printf("%p", &i);</code>), el compilador dará un error. Has creado una variable que existe físicamente pero no tiene coordenadas en la RAM.</p>
+
+<p>Hoy en día, los compiladores modernos (GCC, Clang) son tan inteligentes que la mayoría ignoran tu palabra <code>register</code> y deciden automáticamente qué variables merecen ir a los registros basándose en análisis de flujo de datos. Sin embargo, entender por qué <code>&</code> falla aquí separa a los programadores novatos de los ingenieros de sistemas.</p>
+
+<h3 id="m4-2">4.2 El Modificador volatile: Paranoia de Hardware</h3>
+<p>Los compiladores modernos son agresivos en sus optimizaciones. Si detectan que una variable se lee repetidamente en un bucle pero nunca se modifica dentro del código, el compilador la guarda en un registro o en la caché de la CPU y deja de leer la RAM para ahorrar ciclos. Esto es óptimo en software normal, pero catastrófico en hardware.</p>
+
+<p>Imagina que estás programando el software de un motor de auto. Tienes un sensor de temperatura conectado físicamente a un puerto de la placa base. Ese puerto está mapeado a una dirección de RAM específica. El hardware exterior puede cambiar el voltaje de esa dirección en cualquier momento, sin que tu código lo sepa.</p>
+
+<pre><code><span class="c">// Sin volatile: EL COMPILADOR TE TRAICIONARÁ</span>
+<span class="t">int</span> *sensor = (<span class="t">int</span> *)<span class="n">0x40004400</span>;
+<span class="k">while</span> (*sensor >= <span class="n">90</span>) {
+    <span class="c">// El compilador lee la RAM UNA VEZ, guarda 90 en caché,</span>
+    <span class="c">// y nunca vuelve a mirar la RAM real. Bucle infinito.</span>
+    <span class="c">// El motor explota.</span>
+}</code></pre>
+
+<div class="box w">
+<h4>La Solución: Obligar al Compilador a Leer Siempre</h4>
+<pre style="margin-top:10px"><code><span class="c">// Con volatile: El compilador NO puede cachear</span>
+<span class="k">volatile int</span> *sensor = (<span class="k">volatile int</span> *)<span class="n">0x40004400</span>;
+<span class="k">while</span> (*sensor >= <span class="n">90</span>) {
+    <span class="c">// La CPU viaja a la RAM FÍSICA en CADA iteración.</span>
+    <span class="c">// Si el sensor baja a 89, el bucle se rompe inmediatamente.</span>
+}</code></pre>
+<p><code>volatile</code> es una orden absoluta: "Esta memoria puede ser modificada por el mundo exterior en cualquier nanosegundo. Tienes terminantemente prohibido usar caché. Lee la RAM real cada vez." Es esencial en programación de drivers, robótica y sistemas embebidos.</p>
+</div>
+
+<h3 id="m4-3">4.3 Alineación de Memoria y Memory Padding</h3>
+<p>La CPU no lee la memoria byte por byte. Opera en bloques llamados Words (palabras de 4 u 8 bytes). Si una variable de 4 bytes comienza en una dirección que no es múltiplo de 4, la CPU sufre una penalización grave de rendimiento (Unaligned Access) viéndose obligada a realizar dos lecturas en lugar de una.</p>
+
+<p>Para evitar esto, el compilador inyecta bytes vacíos (Padding) dentro de las estructuras para alinear las variables pesadas a direcciones múltiplos de su tamaño:</p>
+
+<pre><code><span class="t">struct</span> Sensor {
+    <span class="t">char</span>   id;      <span class="c">// 1 Byte</span>
+    <span class="t">double</span> lectura; <span class="c">// 8 Bytes</span>
+    <span class="t">int</span>    estado;  <span class="c">// 4 Bytes</span>
+};
+<span class="c">// Suma lógica: 1 + 8 + 4 = 13 Bytes</span>
+<span class="c">// sizeof real: 24 Bytes (11 Bytes de Padding inyectados)</span></code></pre>
+
+<div class="mem">
+<div class="mem-h">Visualización real de la estructura en memoria (24 Bytes)</div>
+<div class="mc a">char id<br>1 byte</div>
+<div class="mc p">pad</div><div class="mc p">pad</div><div class="mc p">pad</div>
+<div class="mc p">pad</div><div class="mc p">pad</div><div class="mc p">pad</div><div class="mc p">pad</div>
+<div class="mc a" style="grid-column:1/-1">double lectura (8 bytes alineados perfectamente)</div>
+<div class="mc a" style="grid-column:1/-1">int estado (4 bytes alineados)</div>
+<div class="mc p">pad</div><div class="mc p">pad</div><div class="mc p">pad</div><div class="mc p">pad</div>
+</div>
+
+<p>El compilador sacrificó 11 bytes de RAM para complacer a la CPU. Si reordenas la estructura colocando los tipos más grandes primero (<code>double</code>, <code>int</code>, <code>char</code>), el compilador necesitará menos Padding y el tamaño total se reducirá significativamente.</p>
+
+<h3 id="m4-4">4.4 Endianness: El Orden de los Bytes</h3>
+<p>Un <code>int</code> de 32 bits con el valor 0x0A0B0C0D ocupa 4 bytes: <code>0A</code>, <code>0B</code>, <code>0C</code>, <code>0D</code>. Pero, ¿en qué orden los guarda la RAM?</p>
+
+<p>Los procesadores Intel/AMD (x86) usan <strong>Little-Endian</strong>: el byte menos significativo va primero en la dirección base más baja. Los protocolos de internet (TCP/IP) usan <strong>Big-Endian</strong>: el byte más significativo va primero. Si envías un <code>int</code> crudo por un socket de red desde una PC Intel a un servidor que espera Big-Endian, el número se corromperá catastroficamente. Por eso C tiene funciones como <code>htonl()</code> (Host to Network Long) que invierten los bytes antes de enviarlos.</p>
+
+<div class="mem">
+<div class="mem-h">Valor: 0x0A0B0C0D</div>
+<div class="mc a">Big-Endian<br>0A 0B 0C 0D<br>(Redes TCP/IP)</div>
+<div class="mc g">Little-Endian<br>0D 0C 0B 0A<br>(Intel/AMD)</div>
+</div>
+
+
+<!-- ===================== MÓDULO 5 ===================== -->
+<h2 id="m5" style="margin-top:80px">Módulo 5: Punteros y Seguridad de Memoria</h2>
+<p>El poder del lenguaje C reside en permitir que la lógica del software acceda directamente a las coordenadas de la memoria física. La herramienta para esto es el puntero: una variable cuyo contenido es la dirección hexadecimal de otra variable. Con los punteros, el programador puede manipular la memoria directamente, sin pasar por las abstracciones del lenguaje.</p>
+
+<h3 id="m5-1">5.1 Punteros: Variables de Coordenadas</h3>
+<p>Un puntero no es mágico. Es una variable normal que ocupa 8 Bytes en sistemas de 64 bits, y su contenido es un número hexadecimal. Ese número es la dirección de memoria de otro dato.</p>
+
+<pre><code><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="t">int</span> <span class="f">main</span>() {
+    <span class="t">int</span> x = <span class="n">42</span>;
+    <span class="t">int</span> *puntero = &x; <span class="c">// 'puntero' guarda la dirección de 'x'</span>
+    
+    <span class="f">printf</span>(<span class="s">"Valor de x: %d\n"</span>, x);           <span class="c">// 42</span>
+    <span class="f">printf</span>(<span class="s">"Dirección de x: %p\n"</span>, puntero); <span class="c">// 0x7ffd...</span>
+    <span class="f">printf</span>(<span class="s">"Valor vía puntero: %d\n"</span>, *puntero); <span class="c">// 42</span>
+    
+    <span class="c">// Sobreescribimos la RAM directamente usando el puntero</span>
+    *puntero = <span class="n">100</span>;
+    <span class="f">printf</span>(<span class="s">"Nuevo valor de x: %d\n"</span>, x); <span class="c">// 100</span>
+    <span class="k">return</span> <span class="n">0</span>;
+}</code></pre>
+
+<p>El operador <code>*</code> (desreferenciación) le dice a la CPU: "Ve a la dirección de memoria almacenada en esta variable, y opera directamente sobre los bytes que están allí". Es como darle a la CPU las coordenadas GPS de un bloque de memoria.</p>
+
+<p><strong>Aritmética de Punteros:</strong> Si tienes un puntero a <code>int</code> apuntando a la dirección <code>0x1000</code> y haces <code>puntero + 1</code>, la CPU no suma 1 a la dirección. Suma <code>sizeof(int)</code> = 4 bytes. El nuevo puntero apunta a <code>0x1004</code>. Esto permite recorrer arrays de forma extremadamente eficiente, saltando de variable en variable sin cálculos adicionales.</p>
+
+<h3 id="m5-2">5.2 Buffer Overflow: La Vulnerabilidad Más Peligrosa del Mundo</h3>
+<p>C no verifica límites de arrays (Bounds Checking). Si creas un array de 3 enteros e intentas escribir en el índice 4, C no dará error. La CPU simplemente calculará la dirección de <code>array[4]</code> usando aritmética de punteros y escribirá en los bytes que están justo después del array, sobrescribiendo lo que sea que haya allí.</p>
+
+<p>En el Stack, justo después de las variables locales, está el Puntero de Retorno: la dirección de memoria que le dice a la CPU a qué instrucción saltar cuando la función termine. Si un Buffer Overflow sobrescribe este puntero, el atacante puede redirigir la ejecución hacia código malicioso inyectado en la memoria. Esta es la base de los exploits más devastadores de la historia informática.</p>
+
+<div class="mem">
+<div class="mem-h">Buffer Overflow: invasión de memoria adyacente</div>
+<div class="mc a">buf[0]<br>(4 bytes)</div>
+<div class="mc a">buf[1]<br>(4 bytes)</div>
+<div class="mc a">buf[2]<br>(4 bytes)</div>
+<div class="mc p">buf[3] = 99<br>(ILEGAL: sobrescribió la variable adyacente)</div>
+<div class="mc p">buf[4] = 99<br>(ILEGAL: sobrescribió el Return Address de la CPU)</div>
+</div>
+
+<h3 id="m5-3">5.3 Comportamiento Indefinido (Undefined Behavior)</h3>
+<p>El estándar de C define un concepto llamado Comportamiento Indefinido (UB). Si tu código rompe ciertas reglas fundamentales (dividir por cero, sobrepasar los límites de un entero con signo, desreferenciar un puntero nulo), el compilador está eximido de cualquier responsabilidad. El programa no tiene obligación de detenerse ni reportar un error.</p>
+
+<p>Lo peor del UB es que el compilador asume que "nunca ocurrirá" y optimiza el código en consecuencia. Si escribes una condición que técnicamente lleva a UB, el compilador puede eliminar esa condición por completo, asumiendo que es código muerto. Tu programa se comportará de forma completamente impredecible y diferente en cada compilación.</p>
+
+<pre><code><span class="t">int</span> x;
+<span class="k">if</span> (x + <span class="n">1</span> < x) {
+    <span class="c">// UB: Overflow en entero con signo</span>
+    <span class="c">// El compilador puede eliminar este bloque por completo,</span>
+    <span class="c">// asumiendo que "x + 1 siempre será mayor que x".</span>
+    <span class="c">// El código entre llaves NUNCA se ejecutará, sin importar el valor real.</span>
+}</code></pre>
+
+
+<!-- ===================== MÓDULO 6 ===================== -->
+<h2 id="m6" style="margin-top:80px">Módulo 6: Herramientas de Análisis y Depuración</h2>
+<p>Caminar a ciegas en la memoria RAM es peligroso. Un solo puntero mal calculado puede corromper datos invisiblemente durante horas antes de causar un fallo catastrófico. Para esto existen herramientas de diagnóstico que inspeccionan la memoria a nivel de hardware.</p>
+
+<h3 id="m6-1">6.1 GDB: El Depurador de la Máquina</h3>
+<p>El GNU Debugger (GDB) permite detener tu programa en cualquier línea de código e inspeccionar el estado real de la CPU y la RAM. A diferencia de los depuradores visuales modernos, GDB accede directamente a los registros del procesador y a las direcciones de memoria virtual del proceso.</p>
+
+<p>El comando más poderoso de GDB es <code>x</code> (Examine Memory). Con él puedes volcar el contenido hexadecimal bruto de cualquier dirección de memoria, revelando bytes de Padding, Garbage Values, corrupción de punteros y patrones de datos que son invisibles en el código fuente.</p>
+
+<div class="box">
+<h4>Ejemplo de sesión GDB:</h4>
+<pre style="margin-top:10px"><code><span class="c">(gdb) break main</span>
+<span class="c">(gdb) run</span>
+<span class="c">(gdb) print &x</span>
+$1 = (<span class="t">int</span> *) 0x7ffd8a9b1c1c
+<span class="c">(gdb) x/4xb 0x7ffd8a9b1c1c</span>
+0x7ffd8a9b1c1c: 0x19  0x00  0x00  0x00
+<span class="c">// 0x19 = 25 decimal. Little-Endian: el byte menos significativo va primero.</span></code></pre>
+<p>El comando <code>x/4xb</code> significa: "Examina 4 bytes, formato hexadecimal, desde esta dirección". Esto te muestra exactamente qué voltajes hay en la RAM en ese momento preciso.</p>
+</div>
+
+<h3 id="m6-2">6.2 Valgrind: El Auditor de Memoria</h3>
+<p>Mientras GDB inspecciona eventos puntuales, Valgrind ejecuta tu programa dentro de una máquina virtual simulada y analiza cada lectura y escritura de memoria en tiempo real. Su herramienta principal, Memcheck, detecta automáticamente:</p>
+
+<ul>
+    <li><strong>Memory Leaks:</strong> Bloques de Heap asignados con <code>malloc</code> que nunca fueron liberados con <code>free</code>.</li>
+    <li><strong>Invalid Reads/Writes:</strong> Intentos de leer o escribir en memoria que no fue asignada (Buffer Overflows).</li>
+    <li><strong>Uso de memoria no inicializada:</strong> Variables que contienen Garbage Values siendo usadas en operaciones.</li>
+</ul>
+
+<div class="box">
+<h4>Ejemplo de salida Valgrind:</h4>
+<pre style="margin-top:10px"><code><span class="c">$ valgrind --leak-check=full ./mi_programa</span>
+
+==1234== <span style="color:var(--rd)">4,000 bytes in 1 blocks are definitely lost</span>
+==1234==    at 0x4C2AB: malloc (vg_replace_malloc.c:299)
+==1234==    by 0x40054E: main (programa.c:7)
+==1234==
+==1234== LEAK SUMMARY:
+==1234==    definitely lost: 4,000 bytes in 1 blocks</code></pre>
+<p>Valgrind te dice exactamente en qué línea de código se pidió la memoria (<code>programa.c:7</code>) y cuántos bytes se perdieron. Sin esta herramienta, encontrar un Memory Leak en un programa de millones de líneas es como buscar una aguja en un pajar.</p>
+</div>
+
+<hr style="border-color:var(--brd);margin:60px 0 30px 0">
+<p style="text-align:center;color:var(--cy);font-family:'Fira Code',monospace;font-size:1.2rem">Fin del documento. Has comprendido la máquina desde el transistor hasta el puntero.</p>
+
+</div>
+</main>
+
+<script>
+const ms=document.getElementById('mainScroll'),pb=document.getElementById('progressBar');
+const secs=document.querySelectorAll('h1,h2,h3');
+const links=document.querySelectorAll('.nav-links a[href^="#"]');
+ms.addEventListener('scroll',()=>{
+let st=ms.scrollTop,sh=ms.scrollHeight-ms.clientHeight;
+pb.style.width=(st/sh)*100+"%";
+let cur='';
+secs.forEach(s=>{if(st>=s.offsetTop-150)cur=s.getAttribute('id')});
+links.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+cur)l.classList.add('active')});
+});
+</script>
+</body>
+</html>
